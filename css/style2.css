@@ -4,8 +4,8 @@
 :root {
   --body-background: #91a57e;
   --main-fg-color: rgb(41, 46, 38);
-  --second-text-color: #175314;
-  --main-text-color: rgb(12, 87, 31);
+  --second-text-color: #173b15;
+  --main-text-color: rgb(63, 70, 64);
   --placeholder-text-color: #609769; /* this is only use for the palceholder text icon */
   --main-border-radius: 4px;
   --main-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),

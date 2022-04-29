@@ -331,7 +331,7 @@ function rippleEffect() {
             if (ripple.classList.contains("ripple-dark")) {
                 rippleSpan.style.background = "rgba(0, 0, 0, 0.3)";
             } else {
-                rippleSpan.style.background = "rgba(255, 255, 255, 0.3";
+                rippleSpan.style.background = "rgba(255, 255, 255, 0.3)";
             }
 
             ripple.appendChild(rippleSpan);
