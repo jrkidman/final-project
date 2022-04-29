@@ -9,7 +9,7 @@ An app to categorize and organize bookmarks
 
 ![App Screenshot](http://hanselreynoso.com/wp-content/uploads/2022/04/Screen-Shot-2022-04-29-at-11.44.30-PM.png)
 
-![App Screenshot](http://hanselreynoso.com/wp-content/uploads/2022/04/app-screenshot.png)
+![App Screenshot](http://hanselreynoso.com/wp-content/uploads/2022/04/Screen-Shot-2022-04-29-at-11.44.13-PM.png)
 
 ## Features
 
