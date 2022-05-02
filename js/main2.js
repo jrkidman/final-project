@@ -4,28 +4,25 @@ let selectedSection;
 let selectedIndex;
 let sectionsList = document.querySelectorAll(".box-header");
 
-
-// run an event for all functions
 document.addEventListener("DOMContentLoaded", () => {
     clearSearchInput();
     getSite();
-    getSelection();
+    getSections();
     setDate();
     rippleEffect();
     animateFloatLabel();
+});
 
-})
-
-Array.from(document.querySelectorAll(".add-button")).forEach(function (element) {
+Array.from(document.querySelectorAll(".add-button")).forEach(function (
+    element
+) {
     element.addEventListener("click", function () {
         setId = this.getAttribute("data-section");
-        openSideBar();  // Call function to open side bar
+        openSideBar(); // Call function to open side bar
+    });
+});
 
-    })
-})
-
-// Assign click event listener to X-plus  button on the side bar
-
+// Assign click event listener to X button on the side bar
 document
     .querySelector("#close-sidebar")
     .addEventListener("click", closeSideBar);
@@ -35,52 +32,49 @@ document
     .getElementById("bookmark-form")
     .addEventListener("submit", function (event) {
         event.preventDefault();
-        // get content from the input field
+        // Get content from input fields
         let urlName = document.querySelector("#get-url").value;
         let domainName = document.querySelector("#get-name").value;
 
         // Call functions if both inputs are filled, otherwise will show an error
         if (urlName && domainName) {
-            saveSite(urlName, domainName, setId) // saving the data to local storage
-            appendSite(urlName, domainName, setId) // call the function to append info to the html
+            saveSite(urlName, domainName, setId); // Call function to save data in Local Storage
+            appendSite(urlName, domainName, setId); // Call function to append data into the HTML
             closeSideBar();
+        } else {
+            errorMessage();
         }
-        else {
-            errorMessage;
-        }
+
         clearValues();
     });
 
-
 // Apply event listener to FAB for open modal
 document.querySelector("#modal-trigger").addEventListener("click", () => {
-    document.querySelector(".modal-overlay").style.display = "block"; // show modal (block check this later)
+    document.querySelector(".modal-overlay").style.display = "block"; // show modal
+
     // if dropdown button is clicked will show list
-    document.querySelector(("#dropdown-trigger")).addEventListener("click", () => {
+    document.querySelector("#dropdown-trigger").addEventListener("click", () => {
         document
             .querySelector("#page-sections")
             .classList.add("dropdown-content-opened");
-    })
-})
+    });
 
-
-
-// if cancel button is clicked will hide modal
-document.querySelector("#close-modal").addEventListener("click", () => {
-    document.querySelector(".modal-overlay").style.display = "block"; // show modal
-    document.querySelector("#dropdown-trigger").innerHTML = "Select Category";
-    checkIfDropdownIsOpen();
-})
-
-// hide modal if clicked outside of the box
-document.querySelector(".modal-overlay").addEventListener("click", (e) => {
-    if (e.target == document.querySelector(".modal-overlay")) {
+    // if cancel button is clicked will hide modal
+    document.querySelector("#close-modal").addEventListener("click", () => {
         document.querySelector(".modal-overlay").style.display = "none";
         document.querySelector("#dropdown-trigger").innerHTML = "Select Category";
         checkIfDropdownIsOpen();
-    }
-});
+    });
 
+    // hide modal if clicked outside of the box
+    document.querySelector(".modal-overlay").addEventListener("click", (e) => {
+        if (e.target == document.querySelector(".modal-overlay")) {
+            document.querySelector(".modal-overlay").style.display = "none";
+            document.querySelector("#dropdown-trigger").innerHTML = "Select Category";
+            checkIfDropdownIsOpen();
+        }
+    });
+});
 
 // Event Listener for apply button in modal
 document.querySelector("#section-change").addEventListener("click", () => {
@@ -176,65 +170,67 @@ function deleteSite() {
 
 function getSections() {
     reprintSections();
-    let list = [].slice.call(sectionsList); // take nodelist and push to an array
-    let innerSections = list.map((e) => e.innerHTML); //from each object in array will take the innerhtml
+    let list = [].slice.call(sectionsList); // Take nodelist and push to an array
+    let innerSections = list.map((e) => e.innerHTML); //From each object in array will take the innerHTML
+
     saveSections(innerSections);
 
+    document.querySelectorAll("#page-sections > li").forEach((e) => e.remove()); // Remove every li on the ul #page-sections
 
-
-    document.querySelectorAll("#page-sections > li").forEach((e) => e.remove()); //remove every li on the ul #page-sections
-    // looping for each header section here
+    // Looping for each header section found
     for (const i in innerSections) {
         let liItem = document.createElement("li");
         liItem.className = "hover-dark";
 
-        //if the li element is clicked will close the whole dropdown
-        liItem.addEventListener("click", () => {
+        // If the li element is click will close the entire dropdown
+        liItem.addEventListener("click", (e) => {
             document
-                .querySelector("#page-selections")
+                .querySelector("#page-sections")
                 .classList.remove("dropdown-content-opened");
-            selectedSection = liItem.innerHTML; // take the innerhtml from the li and save it in a variable
-            selectedSection = i; // save the iteration value of the selected li
-            document.querySelector("#dropdown-trigger").innerHTML = "selectedSection";
-        })
+            selectedSection = liItem.innerHTML; // Take the innerHTML from the li and save it in a variable
+            selectedIndex = i; // Save the iteration value of the selected li
+            document.querySelector("#dropdown-trigger").innerHTML = selectedSection; //
+        });
 
-        liItem.innerHTML = innerSections[i]; // save in innerhtml from li the element from the array
-        document.querySelector("#page-sections").appendChild(liItem); // append li to the ul
-
+        liItem.innerHTML = innerSections[i]; // Save in innerHTML from li the element from the array
+        document.querySelector("#page-sections").appendChild(liItem); // Apprend li to the ul
     }
     rippleEffect();
 }
 
-// function to save each section header to local storage
+// Function to save each section header to Local Storage
 function saveSections(sectionsArray) {
     let sectionTwoSave;
     let savedSections = [];
-    // array will never be empty
+
+    // Array never will be empty so is not necessary to use if conditional to check if Local Storage is empty
     for (const i in sectionsArray) {
         sectionTwoSave = {
-            sectionName: sectionsArray[i], //save section header in an object
+            sectionName: sectionsArray[i], // Save each section header in a object
         };
-        savedSections.push(sectionTwoSave); // put array of objects
-        localStorage.setItem("savedSections", JSON.stringify(savedSections));
+        savedSections.push(sectionTwoSave); // Put in an array of objects
+        localStorage.setItem("savedSections", JSON.stringify(savedSections)); // Save it in Local Storage
     }
 }
 
-// function to get object in lcoal storage and fill each section header
+// Function to get object in Local Storage and fill each section header
 function reprintSections() {
-    let savedSections = JSON.parse(localStorage.getItem("savedSections")); //getting the object to parse
-    //apply text to innerhtml of each section header
+    let savedSections = JSON.parse(localStorage.getItem("savedSections")); // Get object list
+
+    // Apply text from array to innerHTML of each section header
     for (const i in savedSections) {
         sectionsList[i].innerHTML = savedSections[i].sectionName;
     }
 }
 
-// DOM functions effects and animations
+/* Interactive DOM functions for effects and animations */
 
-// DOM interactions
+// Interact with DOM to show salute message and date
 function setDate() {
+    // Initialize javascript date object
     let dateObject = new Date();
 
-    // const array variable to properly do the date in a text
+    // Const array variables to get properly the date in text
     const MONTHS = [
         "January",
         "February",
@@ -258,11 +254,12 @@ function setDate() {
         "Friday",
         "Saturday",
     ];
-    // date element check later
+
+    // Search for elements to fill with date elements
     let dateParagraph = document.querySelector(".show-date");
     let timeOfDay = document.querySelector(".show-salute");
 
-    // fill paragraph elements with date format
+    // Fill paragraph element with date format
     dateParagraph.innerHTML =
         DAYS[dateObject.getDay()] +
         " " +
@@ -284,75 +281,74 @@ function setDate() {
     }
 }
 
-// float animation label
+// Give properly animation to float labels on inputs
 function animateFloatLabel() {
-    //search for all inputs in page
+    // Search for all inputs in page
     let inputs = document.querySelectorAll(".form-input");
 
-    //loop that goes inside of each input
+    // loop inside each one of inputs
     inputs.forEach((input) => {
-        let inputWrapper = input.parentNode; // search for parent check later
-        let label = inputWrapper.querySelector(".floating-label"); // search for the label from the input tag check later
+        let inputWrapper = input.parentNode; // Search for parent of the input
+        let label = inputWrapper.querySelector(".floating-label"); // Search for the label for the input
 
-        // apply the focus listener
+        // Apply a focus listener
         input.addEventListener("focus", () => {
             label.classList.add("label-focused");
             label.classList.add("label-color-focused");
-        })
+        });
 
-        // add unfocus event listener
+        // Apply a unfocus listener to the same element
         input.addEventListener("blur", () => {
-            let inputValue = inputWrapper.querySelectorAll(".form-input").value;
+            let inputValue = inputWrapper.querySelector(".form-input").value;
             label.classList.remove("label-color-focused");
-            // once it's empty reset it
 
-            if (inputValue === "") {
-                label.classList.remove("label-focused")
+            // If the input is empty will reset classes
+            if (inputValue == "") {
+                label.classList.remove("label-focused");
             }
-        })
-    })
+        });
+    });
 }
 
 function rippleEffect() {
-    let rippleElements = document.querySelectorAll(".ripple"); // search for all ripple classes
-    rippleElements.forEach((e) => (e.onmousedown = null)); // removes every listener event if it's already applied
+    let rippleElements = document.querySelectorAll(".ripple"); // Search for ripple classes applied
+    rippleElements.forEach((e) => (e.onmousedown = null)); // Remove every listener if already has been applied
 
-    // add event listener to everything else check later for update comments
+    // add a listener to each element with ripple class
     rippleElements.forEach((ripple) => {
         ripple.addEventListener("mousedown", (e) => {
-            let offset = ripple.getBoundingClientRect(); //get position relative to the viewport for positioning
+            let offset = ripple.getBoundingClientRect(); // Get position relative to the viewport
 
-            // calculations for when it's clicked
+            //calculate where has been clicked
             let X = e.clientX - offset.left;
             let Y = e.clientY - offset.top;
 
             let rippleSpan = document.createElement("span");
             rippleSpan.classList.add("ripple-effect");
-            rippleSpan.setAttribute("style", "top:" + Y + "px; left" + X + "px;");
+            rippleSpan.setAttribute("style", "top:" + Y + "px; left:" + X + "px;");
 
-            // ripple dark stuff
+            // If the ripple class have ripple-dark added too will apply dark background, if not white
             if (ripple.classList.contains("ripple-dark")) {
-                rippleSpan.style.background = "rgba(0,0,0,0.3)";
+                rippleSpan.style.background = "rgba(0, 0, 0, 0.3)";
+            } else {
+                rippleSpan.style.background = "rgba(255, 255, 255, 0.3)";
             }
-            else {
-                rippleSpan.style.background = "rgba(255,255,255,0.3)";
-            }
+
             ripple.appendChild(rippleSpan);
 
             setTimeout(() => {
                 rippleSpan.parentNode.removeChild(rippleSpan);
             }, 900);
-        })
-    })
+        });
+    });
 }
 
-// some missed functions
+/* Secondary functions made for open/close/hide  */
 
-// function to clear values
+// Function to clear values on inputs
 function clearValues() {
     document.querySelector("#get-url").value = "";
     document.querySelector("#get-name").value = "";
-
 }
 
 function clearSearchInput() {
@@ -361,7 +357,7 @@ function clearSearchInput() {
     }
 }
 
-// make sidebar visible
+// Function to set styles and make side bar visible
 function openSideBar() {
     document.querySelector(".sidenav").classList.add("sidenav-isvisible");
     document.querySelector(".sidebar-overlay").classList.add("overlay-isvisible");
@@ -371,9 +367,10 @@ function openSideBar() {
     document.getElementById("get-url").focus();
 }
 
-// empty fields
+// When an input field is empty and submit an error message will be displayed
 function errorMessage() {
     document.querySelector(".form-error").classList.add("form-error-isvisible");
+
     setTimeout(() => {
         document
             .querySelector(".form-error")
@@ -381,7 +378,7 @@ function errorMessage() {
     }, 1500);
 }
 
-// make the sidebar invisible
+// Function to set styles and make side bar invisible
 function closeSideBar() {
     document.querySelector(".sidenav").classList.remove("sidenav-isvisible");
     document
@@ -390,7 +387,7 @@ function closeSideBar() {
     clearValues();
 }
 
-// need to close the dropdown
+// If the dropdown list is open will close it
 function checkIfDropdownIsOpen() {
     if (document.querySelector(".dropdown-content-opened")) {
         document
@@ -398,4 +395,3 @@ function checkIfDropdownIsOpen() {
             .classList.remove("dropdown-content-opened");
     }
 }
-
