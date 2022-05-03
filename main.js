@@ -1,5 +1,5 @@
-// this array is for keeping user data.
-// if new user arrive use push method
+// this array of objects is for keeping user data.
+// if a new user sets up, use push to add to array
 
 var loginVar = [
     {
@@ -16,13 +16,13 @@ var loginVar = [
 
 /* get variables, localstorage, everything to make this code easier */
 
-// get data from local storage
+// get data from local storage, these are users that are already set up
 let loginVarObj = JSON.parse(localStorage.getItem("logged-in-users"));
 
 // get those id(s) in a variable to use it later (login part)
 var loginFormField = document.getElementById("loginForm");
 
-// get those id(s) in a variable to use it later (sign in part)
+// get those id(s) in a variable to use it later (sign up part)
 var signUpFormField = document.getElementById("signUpForm");
 
 // box field for output
@@ -75,7 +75,7 @@ function login(e) {
         loginVar = loginVarObj;
     }
 
-    // run a for loop to validate data from array.
+    // for loop to validate data from array
     for (let i = 0; i < loginVar.length; i++) {
         if (
             usernameField == loginVar[i].userName &&
@@ -106,7 +106,7 @@ function login(e) {
         }
     }
 
-    // check is the user exist
+    // check if the user exists
     function userExists(username) {
         return loginVar.some(function (el) {
             return el.userName === username;
@@ -126,7 +126,7 @@ function login(e) {
     }
 }
 
-// if "have an account" button is clicked this function will run.
+// if an account already exists for logging in and the login info is valid, this function will run.
 function newLogIn() {
     // make the input field blank
     document.querySelector("#user").value = "";
@@ -138,7 +138,7 @@ function newLogIn() {
     hide(boxField);
 }
 
-// if "new user? sign in now" button is clicked this function will run.
+// if "not a member? sign up" button is clicked this function will run.
 function newSignUp() {
     // make the sign in form's input field blank
     document.querySelector("#fullN").value = "";
@@ -168,12 +168,12 @@ function signUp(e) {
         return;
     }
 
-    // update loginVar array.
+    // update loginVar array
     if (loginVarObj != null) {
         loginVar = loginVarObj;
     }
 
-    // run a for loop to validate data
+    // for loop to validate data
     for (i = 0; i < loginVar.length; i++) {
         if (userName == loginVar[i].userName) {
             window.alert("this username is already taken");
@@ -199,10 +199,10 @@ function signUp(e) {
     // add this into a variable.
     let fullName = loginVar[loginVar.length - 1].fullName;
 
-    // show the output
+    // show the output, welcome for logged in/existing user
     welcome(fullName);
 
-    // login true
+    // if login is true, will re-direct to bookmarks page
     loggedInStatus = true;
     loggedInStatusStr = JSON.stringify(loggedInStatusObj);
     localStorage.setItem("last-logged-in", loggedInStatus);
