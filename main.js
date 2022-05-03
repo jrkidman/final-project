@@ -14,19 +14,19 @@ var loginVar = [
     },
 ];
 
-/* get variables, localstorage, everything to make this code easier */
 
 // get data from local storage, these are users that are already set up
 let loginVarObj = JSON.parse(localStorage.getItem("logged-in-users"));
 
-// get those id(s) in a variable to use it later (login part)
+// get the login form in a variable to use it later (login part)
 var loginFormField = document.getElementById("loginForm");
 
-// get those id(s) in a variable to use it later (sign up part)
+// get the signup form in a variable to use it later (sign up part)
 var signUpFormField = document.getElementById("signUpForm");
 
 // box field for output
 var boxField = document.getElementById("box");
+
 
 /* ready for work */
 
@@ -46,6 +46,7 @@ let lastLoginName;
 let loggedInStatusObj = JSON.parse(localStorage.getItem("last-logged-in"));
 let loggedInNameObj = localStorage.getItem("last-logged-in-user");
 
+// welcome for existing users
 function welcome(fullName) {
     show(boxField);
     boxField.innerHTML = `<div class="form"><h1>Welcome</h1><h2>${fullName}</h2><input type="button" value="Logout" onclick="logout()" class="logout-btn"></div>`;
@@ -64,11 +65,10 @@ lastLoggedInStatus();
 function login(e) {
     e.preventDefault();
 
-    // take the input field's value in variable to validate
+    // get input field's value in variable to validate; queryselect the username and password to be able to check it later
     var usernameField = document.querySelector("#user").value;
     var pwdField = document.querySelector("#pwd").value;
 
-    // remove class from box-field to show the output && add class to new login button to hide it.
 
     // update loginVar array.
     if (loginVarObj != null) {
@@ -155,7 +155,7 @@ function newSignUp() {
 function signUp(e) {
     e.preventDefault();
 
-    // take the field values in variables
+    // put the field values in variables; queryselect new user's signup info to be able to store later
     let fullNameSign = document.querySelector("#fullN").value;
     let userName = document.querySelector("#userSign").value;
     let signpwd = document.querySelector("#pwdSign").value;
@@ -188,7 +188,7 @@ function signUp(e) {
         passWord: signpwd,
     });
 
-    // add to localstorage
+    // add new user info to localstorage
     let loginVarStr = JSON.stringify(loginVar);
     localStorage.setItem("logged-in-users", loginVarStr);
 
